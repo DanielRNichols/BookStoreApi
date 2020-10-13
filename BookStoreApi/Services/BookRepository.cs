@@ -29,6 +29,12 @@ namespace BookStoreApi.Services
             throw new NotImplementedException();
         }
 
+        public async Task<bool> Exists(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+
         public Task<bool> Save()
         {
             throw new NotImplementedException();
