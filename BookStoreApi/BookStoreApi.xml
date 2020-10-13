@@ -4,6 +4,24 @@
         <name>BookStoreApi</name>
     </assembly>
     <members>
+        <member name="T:BookStoreApi.Controllers.AuthorsController">
+            <summary>
+            Url to interact with Authors
+            </summary>
+        </member>
+        <member name="M:BookStoreApi.Controllers.AuthorsController.GetAuthors">
+            <summary>
+            Get all authors
+            </summary>
+            <returns>List of authors</returns>
+        </member>
+        <member name="M:BookStoreApi.Controllers.AuthorsController.GetAuthor(System.Int32)">
+            <summary>
+            Get Author by Id
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
         <member name="M:BookStoreApi.Controllers.HomeController.Get">
             <summary>
                 GET: api/home
