@@ -30,5 +30,38 @@ namespace BookStoreApi.Services
         {
             logger.Warn(message);
         }
+
+        public void LogMessage(LoggerLevel level, string message)
+        {
+            switch (level)
+            {
+                case LoggerLevel.Debug:
+                    LogDebug(message);
+                    break;
+
+                case LoggerLevel.Error:
+                    LogError(message);
+                    break;
+
+                case LoggerLevel.Warn:
+                    LogWarn(message);
+                    break;
+
+                default:
+                    LogInfo(message);
+                    break;
+
+            }
+        }
+
+        public void LogServerError(string msg)
+        {
+            LogError($"Server Error: {msg}");
+        }
+
+        public void LogServerError(Exception e)
+        {
+            LogServerError($"{ e.Message} - {e.InnerException}");
+        }
     }
 }

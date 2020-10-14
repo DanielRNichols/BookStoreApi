@@ -37,6 +37,20 @@
             <param name="authorDTO"></param>
             <returns></returns>
         </member>
+        <member name="M:BookStoreApi.Controllers.BooksController.GetBooks">
+            <summary>
+            Get Books
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:BookStoreApi.Controllers.BooksController.Update(System.Int32,BookStoreApi.DTOs.BookUpdateDTO)">
+            <summary>
+            Update Book
+            </summary>
+            <param name="id"></param>
+            <param name="bookDTO"></param>
+            <returns></returns>
+        </member>
         <member name="M:BookStoreApi.Controllers.HomeController.Get">
             <summary>
                 GET: api/home

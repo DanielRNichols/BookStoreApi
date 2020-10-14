@@ -1,5 +1,6 @@
 ﻿using BookStoreApi.Contracts;
 using BookStoreApi.Data;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,40 +10,60 @@ namespace BookStoreApi.Services
 {
     public class BookRepository : IBookRepository
     {
-        public Task<bool> Create(Book entity)
+        private readonly ApplicationDbContext _db;
+
+        public BookRepository(ApplicationDbContext db)
         {
-            throw new NotImplementedException();
+            _db = db;
         }
 
-        public Task<bool> Delete(Book entity)
+        public async Task<bool> Create(Book entity)
         {
-            throw new NotImplementedException();
+            await _db.Books.AddAsync(entity);
+
+            return await Save();
         }
 
-        public Task<IList<Book>> FindAll()
+        public async Task<bool> Delete(Book entity)
         {
-            throw new NotImplementedException();
+            _db.Books.Remove(entity);
+
+            return await Save();
         }
 
-        public Task<Book> FindById(int id)
+        public async Task<IList<Book>> FindAll()
         {
-            throw new NotImplementedException();
+            var books = await _db.Books.Include(b => b.Author).ToListAsync();
+
+            return books;
+        }
+
+        public async Task<Book> FindById(int id)
+        {
+            //var book = await _db.Books.FindAsync(id);
+            var book = await _db.Books.Include(b => b.Author).FirstOrDefaultAsync(b => b.Id == id);
+
+            return book;
         }
 
         public async Task<bool> Exists(int id)
         {
-            throw new NotImplementedException();
+            return await _db.Books.AnyAsync(row => row.Id == id);
         }
 
 
-        public Task<bool> Save()
+        public async Task<bool> Save()
         {
-            throw new NotImplementedException();
+            var changes = await _db.SaveChangesAsync();
+
+            return changes > 0;
         }
 
-        public Task<bool> Update(Book entity)
+        public async Task<bool> Update(Book entity)
         {
-            throw new NotImplementedException();
+            _db.Books.Update(entity);
+
+            return await Save();
         }
     }
 }

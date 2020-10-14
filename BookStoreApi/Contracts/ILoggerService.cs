@@ -5,6 +5,13 @@ using System.Threading.Tasks;
 
 namespace BookStoreApi.Contracts
 {
+    public enum LoggerLevel
+    {
+        Info,
+        Warn,
+        Error,
+        Debug
+    }
     public interface ILoggerService
     {
         void LogInfo(string message);
@@ -12,5 +19,8 @@ namespace BookStoreApi.Contracts
         void LogError(string message);
         void LogDebug(string message);
 
+        void LogMessage(LoggerLevel level, string message);
+        void LogServerError(string msg);
+        void LogServerError(Exception e);
     }
 }
