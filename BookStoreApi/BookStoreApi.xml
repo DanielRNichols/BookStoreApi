@@ -57,5 +57,12 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:BookStoreApi.Controllers.UsersController.Login(BookStoreApi.DTOs.UserDTO)">
+            <summary>
+            User Login Endpoint
+            </summary>
+            <param name="userDTO"></param>
+            <returns></returns>
+        </member>
     </members>
 </doc>

@@ -19,6 +19,9 @@ using BookStoreApi.Services;
 using BookStoreApi.Contracts;
 using AutoMapper;
 using BookStoreApi.Mappings;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace BookStoreApi
 {
@@ -38,7 +41,8 @@ namespace BookStoreApi
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+            services.AddDefaultIdentity<IdentityUser>() //options => options.SignIn.RequireConfirmedAccount = true)
+                .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
             services.AddCors(options =>
@@ -51,6 +55,25 @@ namespace BookStoreApi
 
             // AutoMapper
             services.AddAutoMapper(typeof(Maps));
+
+            // JWT Authentication
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
+                        ValidateLifetime = true,
+                        ValidateIssuerSigningKey = true,
+                        ValidIssuer = Configuration["Jwt:issuer"],
+                        ValidAudience = Configuration["Jwt:issuer"],
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:key"]))
+
+                    };
+
+                });
+          
 
             services.AddSwaggerGen(cfg =>
             {
@@ -78,7 +101,10 @@ namespace BookStoreApi
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, 
+            IWebHostEnvironment env,
+            UserManager<IdentityUser> userManager,
+            RoleManager<IdentityRole> roleManager)
         {
             if (env.IsDevelopment())
             {
@@ -102,6 +128,8 @@ namespace BookStoreApi
             app.UseHttpsRedirection();
 
             app.UseCors("CorsPolicy");
+
+            SeedData.Seed(userManager, roleManager).Wait();
 
             app.UseRouting();
 
