@@ -7,6 +7,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Runtime.InteropServices;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace BookStore_UI.Services
@@ -27,7 +28,7 @@ namespace BookStore_UI.Services
 
             var request = new HttpRequestMessage(HttpMethod.Post, url);
 
-            request.Content = new StringContent(JsonConvert.SerializeObject(obj));
+            request.Content = new StringContent(JsonConvert.SerializeObject(obj), Encoding.UTF8, "application/json");
 
             var client = _client.CreateClient();
             HttpResponseMessage response = await client.SendAsync(request);
@@ -86,7 +87,7 @@ namespace BookStore_UI.Services
 
             var request = new HttpRequestMessage(HttpMethod.Put, url + id);
 
-            request.Content = new StringContent(JsonConvert.SerializeObject(obj));
+            request.Content = new StringContent(JsonConvert.SerializeObject(obj), Encoding.UTF8, "application/json");
 
             var client = _client.CreateClient();
             HttpResponseMessage response = await client.SendAsync(request);

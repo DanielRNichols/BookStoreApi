@@ -8,12 +8,12 @@ namespace BookStoreApi.Data
 {
     public static class SeedData
     {
-        private readonly static string _usersAdminName = "admin";
+        //private readonly static string _usersAdminName = "admin";
         private readonly static string _usersAdminEmail = "admin@bookstore.com";
         private readonly static string _usersAdminPassword = "P@ssword1";
-        private readonly static string _usersCustomer1Name = "JoeJackson";
+        //private readonly static string _usersCustomer1Name = "JoeJackson";
         private readonly static string _usersCustomer1Email = "joeJackson@gmail.com";
-        private readonly static string _usersCustomer2Name = "JillJohnson";
+        //private readonly static string _usersCustomer2Name = "JillJohnson";
         private readonly static string _usersCustomer2Email = "jillJohnson@yahoo.com";
         private readonly static string _usersCustomerPassword = "P@ssword1";
 
@@ -32,7 +32,7 @@ namespace BookStoreApi.Data
         {
             if(await userManager.FindByEmailAsync(_usersAdminEmail) == null)
             {
-                var user = new IdentityUser { UserName = _usersAdminName, Email = _usersAdminEmail };
+                var user = new IdentityUser { UserName = _usersAdminEmail, Email = _usersAdminEmail };
                 var result = await userManager.CreateAsync(user, _usersAdminPassword);
                 if(result.Succeeded)
                 {
@@ -42,7 +42,7 @@ namespace BookStoreApi.Data
 
             if (await userManager.FindByEmailAsync(_usersCustomer1Email) == null)
             {
-                var user = new IdentityUser { UserName = _usersCustomer1Name, Email = _usersCustomer1Email };
+                var user = new IdentityUser { UserName = _usersCustomer1Email, Email = _usersCustomer1Email };
                 var result = await userManager.CreateAsync(user, _usersCustomerPassword);
                 if (result.Succeeded)
                 {
@@ -52,7 +52,7 @@ namespace BookStoreApi.Data
 
             if (await userManager.FindByEmailAsync(_usersCustomer2Email) == null)
             {
-                var user = new IdentityUser { UserName = _usersCustomer2Name, Email = _usersCustomer2Email };
+                var user = new IdentityUser { UserName = _usersCustomer2Email, Email = _usersCustomer2Email };
                 var result = await userManager.CreateAsync(user, _usersCustomerPassword);
                 if (result.Succeeded)
                 {

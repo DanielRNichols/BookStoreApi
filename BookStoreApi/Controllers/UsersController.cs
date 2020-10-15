@@ -37,13 +37,44 @@ namespace BookStoreApi.Controllers
             _config = config;
         }
 
+        [HttpPost]
+        [Route("register")]
+        public async Task<IActionResult> Register([FromBody] UserDTO userDTO)
+        {
+            var description = GetControllerDescription();
+            try
+            {
+                var emailAddress = userDTO.EmailAddress;
+                var password = userDTO.Password;
+                _logger.LogInfo($"{description}: Registration attempt from user {emailAddress}");
+                var user = new IdentityUser { Email = emailAddress, UserName = emailAddress };
+
+                var result = await _userManager.CreateAsync(user, password);
+                if (!result.Succeeded)
+                {
+                    foreach(var error in result.Errors)
+                    {
+                        _logger.LogError($"{description}: {error.Code} {error.Description}");
+                    }
+
+                    return InternalError($"{description}: Registration failed user {emailAddress}");
+                }
+                _logger.LogInfo($"{description}: {emailAddress} successfully registered");
+                return Ok(new { user = user });
+            }
+            catch (Exception e)
+            {
+                return InternalError(e);
+            }
+        }
+
         /// <summary>
         /// User Login Endpoint
         /// </summary>
         /// <param name="userDTO"></param>
         /// <returns></returns>
-        [AllowAnonymous]
         [HttpPost]
+        [Route("login")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -52,19 +83,19 @@ namespace BookStoreApi.Controllers
             var description = GetControllerDescription();
             try
             {
-                var userName = userDTO.UserName;
+                var emailAddress = userDTO.EmailAddress;
                 var password = userDTO.Password;
-                _logger.LogInfo($"{description}: Login attempt from user {userName}");
-                var result = await _signInManager.PasswordSignInAsync(userName, password, false, false);
+                _logger.LogInfo($"{description}: Login attempt from user {emailAddress}");
+                var result = await _signInManager.PasswordSignInAsync(emailAddress, password, false, false);
                 if (result.Succeeded)
                 {
-                    _logger.LogInfo($"{description}: {userName} successfully authenticated");
-                    var user = await _userManager.FindByNameAsync(userName);
+                    _logger.LogInfo($"{description}: {emailAddress} successfully authenticated");
+                    var user = await _userManager.FindByNameAsync(emailAddress);
                     var token = await GenerateJWT(user);
                     return Ok(new { token = token });
                 }
 
-                _logger.LogInfo($"{description}: {userName} not authenticated");
+                _logger.LogInfo($"{description}: {emailAddress} not authenticated");
                 return Unauthorized(userDTO);
             }
             catch (Exception e)

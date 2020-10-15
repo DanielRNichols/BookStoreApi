@@ -1,0 +1,60 @@
+﻿@page "/register"
+
+@inject IAuthenticationRepository _authRepo;
+@inject NavigationManager _nav;
+
+<div class="card">
+    <h3 class="card-title">Register</h3>
+    @if (registrationError)
+    {
+        <div class="alert alert-danger">
+            <p>Registration failed</p>
+        </div>
+    }
+    <div class="card-body">
+        <EditForm Model="Model" OnValidSubmit="HandleRegistration">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+
+            <div class="form-group">
+                <label for="emailAddress">Email address</label>
+                <InputText Id="emailAddress" class="form-control" @bind-Value="Model.EmailAddress" />
+                <ValidationMessage For="@(() => Model.EmailAddress)" />
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <InputText Id="password" type="password" class="form-control" @bind-Value="Model.Password" />
+                <ValidationMessage For="@(() => Model.Password)" />
+            </div>
+
+            <div class="form-group">
+                <label for="confirmPassword">Confirm Password</label>
+                <InputText Id="confirmPassword" type="password" class="form-control" @bind-Value="Model.ConfirmPassword" />
+                <ValidationMessage For="@(() => Model.ConfirmPassword)" />
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block">Submit</button>
+        </EditForm>
+    </div>
+</div>
+
+@code {
+    private RegistrationModel Model = new RegistrationModel();
+    private bool registrationError = false;
+
+    private async Task HandleRegistration()
+    {
+        registrationError = false;
+        var response = await _authRepo.Register(Model);
+        if(response)
+        {
+            _nav.NavigateTo("/");
+        }
+        else
+        {
+            registrationError = true;
+        }
+
+    }
+}
