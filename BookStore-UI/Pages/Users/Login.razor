@@ -1,18 +1,18 @@
-﻿@page "/register"
+﻿@page "/login"
 
 @inject IAuthenticationRepository _authRepo;
 @inject NavigationManager _nav;
 
 <div class="card">
-    <h3 class="card-title">Register</h3>
-    @if (registrationError)
+    <h3 class="card-title">Login</h3>
+    @if (loginError)
     {
         <div class="alert alert-danger">
-            <p>Registration failed</p>
+            <p>Login failed</p>
         </div>
     }
     <div class="card-body">
-        <EditForm Model="Model" OnValidSubmit="HandleRegistration">
+        <EditForm Model="Model" OnValidSubmit="HandleLogin">
             <DataAnnotationsValidator />
             <ValidationSummary />
 
@@ -28,32 +28,26 @@
                 <ValidationMessage For="@(() => Model.Password)" />
             </div>
 
-            <div class="form-group">
-                <label for="confirmPassword">Confirm Password</label>
-                <InputText Id="confirmPassword" type="password" class="form-control" @bind-Value="Model.ConfirmPassword" />
-                <ValidationMessage For="@(() => Model.ConfirmPassword)" />
-            </div>
-
-            <button type="submit" class="btn btn-primary btn-block">Register</button>
+            <button type="submit" class="btn btn-primary btn-block">Login</button>
         </EditForm>
     </div>
 </div>
 
 @code {
-    private RegistrationModel Model = new RegistrationModel();
-    private bool registrationError = false;
+    private LoginModel Model = new LoginModel();
+    private bool loginError = false;
 
-    private async Task HandleRegistration()
+    private async Task HandleLogin()
     {
-        registrationError = false;
-        var response = await _authRepo.Register(Model);
-        if(response)
+        loginError = false;
+        var response = await _authRepo.Login(Model);
+        if (response)
         {
-            _nav.NavigateTo("/login");
+            _nav.NavigateTo("/");
         }
         else
         {
-            registrationError = true;
+            loginError = true;
         }
 
     }

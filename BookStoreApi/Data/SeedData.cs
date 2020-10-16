@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using BookStoreApi.Static;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,12 +15,8 @@ namespace BookStoreApi.Data
         //private readonly static string _usersCustomer1Name = "JoeJackson";
         private readonly static string _usersCustomer1Email = "joeJackson@gmail.com";
         //private readonly static string _usersCustomer2Name = "JillJohnson";
-        private readonly static string _usersCustomer2Email = "jillJohnson@yahoo.com";
+        //private readonly static string _usersCustomer2Email = "jillJohnson@yahoo.com";
         private readonly static string _usersCustomerPassword = "P@ssword1";
-
-
-        private readonly static string _rolesAdmin = "Administrator";
-        private readonly static string _rolesCustomer = "Customer";
 
 
         public async static Task Seed(UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager)
@@ -36,7 +33,7 @@ namespace BookStoreApi.Data
                 var result = await userManager.CreateAsync(user, _usersAdminPassword);
                 if(result.Succeeded)
                 {
-                    await userManager.AddToRoleAsync(user, _rolesAdmin);
+                    await userManager.AddToRolesAsync(user, new List<string>() { Roles.Administrator, Roles.Customer });
                 }
             }
 
@@ -46,33 +43,33 @@ namespace BookStoreApi.Data
                 var result = await userManager.CreateAsync(user, _usersCustomerPassword);
                 if (result.Succeeded)
                 {
-                    await userManager.AddToRoleAsync(user, _rolesCustomer);
+                    await userManager.AddToRoleAsync(user, Roles.Customer);
                 }
             }
 
-            if (await userManager.FindByEmailAsync(_usersCustomer2Email) == null)
-            {
-                var user = new IdentityUser { UserName = _usersCustomer2Email, Email = _usersCustomer2Email };
-                var result = await userManager.CreateAsync(user, _usersCustomerPassword);
-                if (result.Succeeded)
-                {
-                    await userManager.AddToRoleAsync(user, _rolesCustomer);
-                }
-            }
+            //if (await userManager.FindByEmailAsync(_usersCustomer2Email) == null)
+            //{
+            //    var user = new IdentityUser { UserName = _usersCustomer2Email, Email = _usersCustomer2Email };
+            //    var result = await userManager.CreateAsync(user, _usersCustomerPassword);
+            //    if (result.Succeeded)
+            //    {
+            //        await userManager.AddToRoleAsync(user, Roles.Customer);
+            //    }
+            //}
 
         }
 
         private async static Task SeedRoles(RoleManager<IdentityRole> roleManager)
         {
-            if(!await roleManager.RoleExistsAsync(_rolesAdmin))
+            if(!await roleManager.RoleExistsAsync(Roles.Administrator))
             {
-                var role = new IdentityRole { Name = _rolesAdmin };
+                var role = new IdentityRole { Name = Roles.Administrator };
                 await roleManager.CreateAsync(role);
             }
 
-            if (!await roleManager.RoleExistsAsync(_rolesCustomer))
+            if (!await roleManager.RoleExistsAsync(Roles.Customer))
             {
-                var role = new IdentityRole { Name = _rolesCustomer };
+                var role = new IdentityRole { Name = Roles.Customer };
                 await roleManager.CreateAsync(role);
             }
         }

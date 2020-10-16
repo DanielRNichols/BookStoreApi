@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using BookStoreApi.Contracts;
 using BookStoreApi.DTOs;
+using BookStoreApi.Static;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -39,7 +40,20 @@ namespace BookStoreApi.Controllers
 
         [HttpPost]
         [Route("register")]
-        public async Task<IActionResult> Register([FromBody] UserDTO userDTO)
+        public async Task<IActionResult> RegisterCustomer([FromBody] UserDTO userDTO)
+        {
+            return await Register(userDTO, new List<string>() { Roles.Customer });
+        }
+
+        [HttpPost]
+        [Route("registeradmin")]
+        [Authorize(Roles = Roles.Administrator)]
+        public async Task<IActionResult> RegisterAdmin([FromBody] UserDTO userDTO)
+        {
+            return await Register(userDTO, new List<string>() { Roles.Administrator, Roles.Customer });
+        }
+
+        private async Task<IActionResult> Register(UserDTO userDTO, IList<string> roles)
         {
             var description = GetControllerDescription();
             try
@@ -52,13 +66,17 @@ namespace BookStoreApi.Controllers
                 var result = await _userManager.CreateAsync(user, password);
                 if (!result.Succeeded)
                 {
-                    foreach(var error in result.Errors)
+                    foreach (var error in result.Errors)
                     {
                         _logger.LogError($"{description}: {error.Code} {error.Description}");
                     }
 
                     return InternalError($"{description}: Registration failed user {emailAddress}");
                 }
+
+                if(roles != null)
+                    await _userManager.AddToRolesAsync(user, roles);
+
                 _logger.LogInfo($"{description}: {emailAddress} successfully registered");
                 return Ok(new { user = user });
             }
@@ -66,7 +84,11 @@ namespace BookStoreApi.Controllers
             {
                 return InternalError(e);
             }
+
         }
+
+
+
 
         /// <summary>
         /// User Login Endpoint
