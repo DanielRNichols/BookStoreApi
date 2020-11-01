@@ -1,10 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using BookStoreApi.Contracts;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Net;
 
 namespace BookStoreApi.Data
 {
     [Table("Books")]
-    public partial class Book
+    public partial class Book : IDbResource
     {
         public int Id { get; set; }
         public string Title { get; set; }

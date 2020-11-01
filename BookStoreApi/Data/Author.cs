@@ -1,11 +1,12 @@
-﻿using System.Collections;
+﻿using BookStoreApi.Contracts;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BookStoreApi.Data
 {
     [Table("Authors")]
-    public partial class Author
+    public partial class Author : IDbResource
     {
         public int Id { get; set; }
         public string FirstName { get; set; }
