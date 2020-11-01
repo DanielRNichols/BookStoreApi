@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace BookStoreApi.Services
 {
-    public class RepositoryBase<T> : IRepositoryBase<T> where T: class, IDbResource
+    public class DbResourceRepository<T> : IDbResourceRepository<T> where T: class, IDbResource
     {
         private readonly ApplicationDbContext _db;
         private readonly DbSet<T> _dbContext;
-        public RepositoryBase(ApplicationDbContext db, DbSet<T> dbContext)
+        public DbResourceRepository(ApplicationDbContext db, DbSet<T> dbContext)
         {
             _db = db;
             _dbContext = dbContext;

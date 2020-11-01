@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace BookStoreApi.Services
 {
-    public class AuthorRepository : RepositoryBase<Author>, IAuthorRepository
+    public class AuthorRepository : DbResourceRepository<Author>, IAuthorRepository
     {
         private readonly ApplicationDbContext _db;
 
