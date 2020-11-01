@@ -45,6 +45,7 @@ namespace BookStore_UI
             services.AddScoped<JwtSecurityTokenHandler>();
 
             services.AddTransient<IAuthenticationRepository, AuthenticationRepository>();
+            services.AddScoped<BookStore_UI.Contracts.ILocalStorageService, BookStore_UI.Services.LocalStorageService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

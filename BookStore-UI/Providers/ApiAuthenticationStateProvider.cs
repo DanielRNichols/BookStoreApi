@@ -1,5 +1,4 @@
-﻿using Blazored.LocalStorage;
-using BookStore_UI.Static;
+﻿using BookStore_UI.Static;
 using Microsoft.AspNetCore.Components.Authorization;
 using System;
 using System.Collections.Generic;
@@ -12,10 +11,11 @@ namespace BookStore_UI.Providers
 {
     public class ApiAuthenticationStateProvider : AuthenticationStateProvider
     {
-        private readonly ILocalStorageService _localStorage;
+        private readonly BookStore_UI.Contracts.ILocalStorageService _localStorage;
         private readonly JwtSecurityTokenHandler _tokenHandler;
 
-        public ApiAuthenticationStateProvider(ILocalStorageService localStorage, JwtSecurityTokenHandler tokenHandler)
+        public ApiAuthenticationStateProvider(BookStore_UI.Contracts.ILocalStorageService localStorage, 
+            JwtSecurityTokenHandler tokenHandler)
         {
             _localStorage = localStorage;
             _tokenHandler = tokenHandler;
@@ -24,7 +24,7 @@ namespace BookStore_UI.Providers
         {
             try
             {
-                var tokenString = await _localStorage.GetItemAsStringAsync(LocalStorageKeys.AuthToken);
+                var tokenString = await _localStorage.GetStringAsync(LocalStorageKeys.AuthToken);
                 if (String.IsNullOrWhiteSpace(tokenString))
                 {
                     // return empty claim, basically nobody logged in
@@ -60,7 +60,7 @@ namespace BookStore_UI.Providers
 
         public async Task SetStateToLoggedIn()
         {
-            var tokenString = await _localStorage.GetItemAsStringAsync(LocalStorageKeys.AuthToken);
+            var tokenString = await _localStorage.GetStringAsync(LocalStorageKeys.AuthToken);
             var token = _tokenHandler.ReadJwtToken(tokenString);
             var claims = ParseClaims(token);
             var user = new ClaimsPrincipal(new ClaimsPrincipal(new ClaimsIdentity(claims, "jwt")));

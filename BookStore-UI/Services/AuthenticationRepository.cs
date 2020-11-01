@@ -20,11 +20,11 @@ namespace BookStore_UI.Services
     public class AuthenticationRepository : IAuthenticationRepository
     {
         private readonly IHttpClientFactory _client;
-        private readonly ILocalStorageService _localStorage;
+        private readonly BookStore_UI.Contracts.ILocalStorageService _localStorage;
         private readonly AuthenticationStateProvider _authStateProvider;
 
-        public AuthenticationRepository(IHttpClientFactory client, 
-            ILocalStorageService localStorage,
+        public AuthenticationRepository(IHttpClientFactory client,
+            BookStore_UI.Contracts.ILocalStorageService localStorage,
             AuthenticationStateProvider authStateProvider)
         {
             _client = client;
