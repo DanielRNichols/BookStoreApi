@@ -22,6 +22,7 @@ using BookStoreApi.Mappings;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using BookStoreApi.Controllers;
 
 namespace BookStoreApi
 {
@@ -95,6 +96,10 @@ namespace BookStoreApi
             // Repositories
             services.AddScoped<IAuthorRepository, AuthorRepository>();
             services.AddScoped<IBookRepository, BookRepository>();
+
+            // Controller Helpers
+            services.AddScoped<IAuthorsControllerHelper, AuthorsControllerHelper>();
+            services.AddScoped<IBooksControllerHelper, BooksControllerHelper>();
 
             services.AddControllers().AddNewtonsoftJson(options => 
                 options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
